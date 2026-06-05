@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html>
+<body style="font-family:Arial;padding:20px">
+
+
+<h1>🚀 Projets</h1>
+
+{% for row in data %}
+
+<div class="card">
+
+    <h3>{{ row[1] }}</h3>
+    <p>Budget : {{ row[2] }}</p>
+    <p>Avance : {{ row[3] }}</p>
+    <p>{{ row[4] }}</p>
+
+    <a href="/supprimer_projet/{{ row[0] }}">
+        🗑️ Supprimer
+    </a>
+
+</div>
+
+{% endfor %}
+<h1>🚀 Projets</h1>
+
+<form method="POST">
+    <input name="nom" placeholder="Nom projet">
+    <input name="budget" placeholder="Budget">
+    <button>Ajouter projet</button>
+</form>
+
+<hr>
+
+{% for p in data %}
+<p>📌 {{ p[1] }} - Budget: {{ p[2] }} FC</p>
+{% endfor %}
+
+<br>
+<a href="/dashboard">⬅️ Retour dashboard</a>
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+{% if erreur %}
+<div style="
+background:#fee2e2;
+color:#dc2626;
+padding:12px;
+border-radius:10px;
+margin-bottom:15px;
+text-align:center;
+font-weight:bold;
+">
+{{ erreur }}
+</div>
+{% endif %}
+<!DOCTYPE html><html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Banque Pro - Connexion</title><style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI, Arial, sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#0f172a,#1e293b,#2563eb);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.login-box{
+width:400px;
+background:white;
+padding:40px;
+border-radius:25px;
+box-shadow:0 20px 40px rgba(0,0,0,0.3);
+}
+
+.logo{
+text-align:center;
+font-size:60px;
+margin-bottom:10px;
+}
+
+.title{
+text-align:center;
+font-size:28px;
+font-weight:bold;
+color:#0f172a;
+}
+
+.subtitle{
+text-align:center;
+color:gray;
+margin-bottom:25px;
+}
+
+input{
+width:100%;
+padding:15px;
+margin-top:12px;
+border:1px solid #ddd;
+border-radius:12px;
+font-size:16px;
+}
+
+input:focus{
+outline:none;
+border:1px solid #2563eb;
+}
+
+button{
+width:100%;
+padding:15px;
+margin-top:20px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:12px;
+font-size:17px;
+cursor:pointer;
+font-weight:bold;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+.footer{
+text-align:center;
+margin-top:20px;
+color:gray;
+font-size:14px;
+}
+
+</style></head>
+<body><div class="login-box"><div class="logo">🏦</div><div class="title">
+Gestion Financière d'Onesime
+</div><div class="subtitle">
+Connexion sécurisée
+</div><form method="POST"><input
+type="text"
+name="username"
+placeholder="Nom d'utilisateur"
+required>
+
+<input
+type="password"
+name="password"
+placeholder="Mot de passe"
+required>
+
+<button type="submit">
+🔐 Se connecter
+</button></form><div class="footer">
+Banque Pro • Version Premium
+</div></div></body>
+</html>

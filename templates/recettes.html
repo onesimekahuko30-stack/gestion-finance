@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html>
+<body style="font-family:Arial;padding:20px">
+
+<h1>💰 Recettes</h1>
+
+{% for row in data %}
+
+<div class="card">
+
+    <h3>{{ row[1] }}</h3>
+    <p>{{ row[2] }} FC</p>
+    <p>{{ row[3] }}</p>
+
+    <a href="/supprimer_recette/{{ row[0] }}">
+        🗑️ Supprimer
+    </a>
+
+</div>
+
+{% endfor %}
+<h1>📈 Recettes</h1>
+
+<form method="POST">
+    <input name="titre" placeholder="Titre">
+    <input name="montant" placeholder="Montant">
+    <button>Ajouter</button>
+</form>
+
+<hr>
+
+{% for r in data %}
+<p>📌 {{ r[1] }} - {{ r[2] }} FC - {{ r[3] }}</p>
+{% endfor %}
+
+<br>
+<a href="/dashboard">⬅️ Retour dashboard</a>
+
+</body>
+</html>

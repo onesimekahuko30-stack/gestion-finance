@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Finance Ultra Pro</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>💎 FINANCE PRO</h2>
+
+    <a href="/dashboard">📊 Dashboard</a>
+    <a href="/recettes">📈 Recettes</a>
+    <a href="/depenses">💸 Dépenses</a>
+    <a href="/dettes">⚠️ Dettes</a>
+    <a href="/projets">🚀 Projets</a>
+    <a href="/logout">🚪 Logout</a>
+</div>
+
+<div class="main">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

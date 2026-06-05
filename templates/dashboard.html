@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="margin-bottom:20px;">
+    <a href="/dashboard">🏠 Dashboard</a> |
+    <a href="/recettes">💰 Recettes</a> |
+    <a href="/depenses">💸 Dépenses</a> |
+    <a href="/dettes">⚠️ Dettes</a> |
+    <a href="/projets">🚀 Projets</a> |
+    <a href="/logout">🚪 Logout</a>
+</div>
+<a href="/graphique">📊 Graphiques</a>
+<div class="top">
+    <h1>📊 Gestion financiere d'onesime</h1>
+</div>
+
+<div class="grid">
+
+<div class="card">💰 Recettes<br><h2>{{ recettes }}</h2></div>
+<div class="card">💸 Dépenses<br><h2>{{ depenses }}</h2></div>
+<div class="card">⚠️ Dettes<br><h2>{{ dettes }}</h2></div>
+<div class="card">🚀 Projets<br><h2>{{ projets }}</h2></div>
+
+<div class="card">📊 Balance<br><h2>{{ balance }}</h2></div>
+<div class="card">📉 Ratio<br><h2>{{ ratio }}%</h2></div>
+
+</div>
+<h2>🧠 Prévisions</h2>
+
+<div class="grid">
+
+<div class="card">
+📈 Recettes prévues
+<h2>{{ recettes_pred }} $</h2>
+</div>
+
+<div class="card">
+📉 Dépenses prévues
+<h2>{{ depenses_pred }} $</h2>
+</div>
+
+<div class="card">
+💳 Dettes prévues
+<h2>{{ dettes_pred }} $</h2>
+</div>
+
+<div class="card">
+🚀 Projets prévus
+<h2>{{ projets_pred }} $</h2>
+</div>
+
+</div>
+<br>
+
+{% if alert > 0 %}
+<div class="alert">
+⚠️ {{ alert }} dette(s) non payée(s)
+</div>
+{% endif %}
+
+<br>
+
+<h3>📈 Graphique financier</h3>
+<img src="{{ url_for('static', filename='graph.png') }}" width="450">
+
+<br><br>
+<br>
+
+<a href="/graph" class="card" style="display:inline-block;text-decoration:none;padding:15px;">
+📊 Voir les graphiques détaillés
+</a>
+{% endblock %}
+<div class="card">
+💡 Système actif de gestion financière<br>
+✔️ Suivi des recettes et dépenses<br>
+✔️ Gestion des dettes et projets<br>
+✔️ Analyse financière en temps réel
+</div>
+

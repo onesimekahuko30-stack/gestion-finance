@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html>
+<body style="font-family:Arial;padding:20px">
+
+{% for row in data %}
+
+<tr>
+    <td>{{ row[1] }}</td>
+    <td>{{ row[2] }}</td>
+    <td>{{ row[3] }}</td>
+
+    <td>
+        <a href="/supprimer_depense/{{ row[0] }}">
+            🗑️ Supprimer
+        </a>
+    </td>
+</tr>
+
+{% endfor %}
+
+<h1>💸 Dépenses</h1>
+
+<form method="POST">
+    <input name="titre" placeholder="Titre">
+    <input name="montant" placeholder="Montant">
+    <button>Ajouter</button>
+</form>
+
+<hr>
+
+{% for d in data %}
+<p>📌 {{ d[1] }} - {{ d[2] }} FC - {{ d[3] }}</p>
+{% endfor %}
+
+<br>
+<a href="/dashboard">⬅️ Retour dashboard</a>
+
+</body>
+</html>
