@@ -314,7 +314,12 @@ def dettes():
     if request.method == "POST":
         c.execute(
             "INSERT INTO dettes(titre,montant,date,statut) VALUES(?,?,?,?)",
-            (request.form["titre"], convertir( request.form["montant"], request.form.get("devise", "CDF")), datetime.now().strftime("%d/%m/%Y"), "non payé")
+            (
+                request.form["titre"],
+                convertir(request.form["montant"], request.form.get("devise", "CDF")),
+                datetime.now().strftime("%d/%m/%Y"),
+                "non payé"
+            )
         )
         conn.commit()
 
