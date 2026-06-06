@@ -19,8 +19,19 @@ os.makedirs("static", exist_ok=True)
 def init_db():
     conn = sqlite3.connect(DB)
     c = conn.cursor()
+    c.execute("SELECT * FROM users WHERE username='admin'")
+    user = c.fetchone()
 
-
+    if user is None:
+        c.execute(
+            "INSERT INTO users(username,password,role) VALUES(?,?,?)",
+            ("admin", generate_password_hash("1234"), "admin")
+        )
+    else:
+        c.execute(
+            "UPDATE users SET password=? WHERE username='admin'",
+            (generate_password_hash("1234"),)
+        )
     c.execute("""
     CREATE TABLE IF NOT EXISTS users(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -424,4 +435,6 @@ def graphique():
 # RUN
 # =========================
 if __name__ == "__main__":
-    app.run(debug=True)
+    init_db()
+
+    app.run(host="0.0.0.0", port=5000, debug=True)
