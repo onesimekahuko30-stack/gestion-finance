@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib 
 matplotlib.use('agg')
 import os
-
+TAUX_USD_CDF = 2400
 app = Flask(__name__)
 app.secret_key = "ULTRA_FINANCE_SECRET"
 DB = "finance.db"
@@ -19,19 +19,8 @@ os.makedirs("static", exist_ok=True)
 def init_db():
     conn = sqlite3.connect(DB)
     c = conn.cursor()
-    c.execute("SELECT * FROM users WHERE username='admin'")
-    user = c.fetchone()
 
-    if user is None:
-        c.execute(
-            "INSERT INTO users(username,password,role) VALUES(?,?,?)",
-            ("admin", generate_password_hash("1234"), "admin")
-        )
-    else:
-        c.execute(
-            "UPDATE users SET password=? WHERE username='admin'",
-            (generate_password_hash("1234"),)
-        )
+    # 1. USERS (DOIT ÊTRE EN PREMIER)
     c.execute("""
     CREATE TABLE IF NOT EXISTS users(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -41,7 +30,7 @@ def init_db():
     )
     """)
 
-    # RECETTES
+    # 2. RECETTES
     c.execute("""
     CREATE TABLE IF NOT EXISTS recettes(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -51,7 +40,7 @@ def init_db():
     )
     """)
 
-    # DEPENSES
+    # 3. DEPENSES
     c.execute("""
     CREATE TABLE IF NOT EXISTS depenses(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -61,23 +50,25 @@ def init_db():
     )
     """)
 
-    # DETTES
+    # 4. DETTES
     c.execute("""
     CREATE TABLE IF NOT EXISTS dettes(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         titre TEXT,
         montant REAL,
+        devise TEXT, 
         date TEXT,
         statut TEXT
     )
     """)
 
-    # PROJETS
+    # 5. PROJETS
     c.execute("""
     CREATE TABLE IF NOT EXISTS projets(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nom TEXT,
         budget REAL,
+        devise TEXT, 
         avance REAL,
         statut TEXT
     )
@@ -94,7 +85,10 @@ def init_db():
     conn.commit()
     conn.close()
 
-
+def convertir(montant, devise):
+    if devise == "USD":
+        return float(montant) * TAUX_USD_CDF
+    return float(montant)
 init_db()
 
 def prediction_recettes():
@@ -269,10 +263,14 @@ def recettes():
     if request.method == "POST":
         c.execute(
             "INSERT INTO recettes(titre,montant,date) VALUES(?,?,?)",
-            (request.form["titre"], request.form["montant"], datetime.now().strftime("%d/%m/%Y"))
-        )
+            (
+    request.form["titre"],
+    convertir(request.form["montant"],
+    request.form["devise"]),
+    datetime.now().strftime("%d/%m/%Y")
+)
+)
         conn.commit()
-
     c.execute("SELECT * FROM recettes ORDER BY id DESC")
     data = c.fetchall()
     conn.close()
@@ -294,8 +292,13 @@ def depenses():
     if request.method == "POST":
         c.execute(
             "INSERT INTO depenses(titre,montant,date) VALUES(?,?,?)",
-            (request.form["titre"], request.form["montant"], datetime.now().strftime("%d/%m/%Y"))
-        )
+            (
+    request.form["titre"],
+    convertir(request.form["montant"],
+    request.form["devise"]),
+    datetime.now().strftime("%d/%m/%Y")
+)       
+)
         conn.commit()
 
     c.execute("SELECT * FROM depenses ORDER BY id DESC")
@@ -303,6 +306,7 @@ def depenses():
     conn.close()
 
     return render_template("depenses.html", data=data)
+
 
 
 # =========================
@@ -319,12 +323,13 @@ def dettes():
     if request.method == "POST":
         c.execute(
             "INSERT INTO dettes(titre,montant,date,statut) VALUES(?,?,?,?)",
-            (request.form["titre"], request.form["montant"], datetime.now().strftime("%d/%m/%Y"), "non payé")
+            (request.form["titre"], convertir( request.form["montant"],request.form["devise"]), datetime.now().strftime("%d/%m/%Y"), "non payé")
         )
         conn.commit()
 
     c.execute("SELECT * FROM dettes ORDER BY id DESC")
     data = c.fetchall()
+
     conn.close()
 
     return render_template("dettes.html", data=data)
@@ -344,11 +349,12 @@ def projets():
     if request.method == "POST":
         c.execute(
             "INSERT INTO projets(nom,budget,avance,statut) VALUES(?,?,?,?)",
-            (request.form["nom"], request.form["budget"], 0, "en cours")
+            (request.form["nom"], convertir( request.form["budget"],request.form["devise"]),  0, "en cours")
         )
         conn.commit()
 
     c.execute("SELECT * FROM projets ORDER BY id DESC")
+
     data = c.fetchall()
     conn.close()
 
@@ -406,6 +412,16 @@ def supprimer_dette(id):
         (id,)
     )
 
+    conn.commit()
+    conn.close()
+
+    return redirect("/dettes")
+@app.route("/payer_dette/<int:id>")
+def payer_dette(id):
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute("UPDATE dettes SET statut='payé' WHERE id=?", (id,))
     conn.commit()
     conn.close()
 

@@ -13,7 +13,9 @@
     <p>{{ row[2] }} FC</p>
     <p>{{ row[3] }}</p>
     <p>{{ row[4] }}</p>
-
+    <a href="/payer_dette/{{ row[0] }}" style="color:green;">
+✔️ Payer
+</a>
     <a href="/supprimer_dette/{{ row[0] }}">
         🗑️ Supprimer
     </a>
@@ -22,7 +24,10 @@
 
 {% endfor %}
 <h1>📋 Dettes</h1>
-
+<select name="devise">
+    <option value="CDF">CDF</option>
+    <option value="USD">USD</option>
+</select>
 <form method="POST">
     <input name="titre" placeholder="Titre">
     <input name="montant" placeholder="Montant">
