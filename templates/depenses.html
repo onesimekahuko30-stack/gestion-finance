@@ -1,39 +1,42 @@
-
 <!DOCTYPE html>
 <html>
 <body style="font-family:Arial;padding:20px">
 
-{% for row in data %}
-
-<tr>
-    <td>{{ row[1] }}</td>
-    <td>{{ row[2] }}</td>
-    <td>{{ row[3] }}</td>
-
-    <td>
-        <a href="/supprimer_depense/{{ row[0] }}">
-            🗑️ Supprimer
-        </a>
-    </td>
-</tr>
-
-{% endfor %}
-
 <h1>💸 Dépenses</h1>
-<select name="devise">
-    <option value="CDF">CDF</option>
-    <option value="USD">USD</option>
-</select>
+
+<!-- FORMULAIRE -->
 <form method="POST">
-    <input name="titre" placeholder="Titre">
-    <input name="montant" placeholder="Montant">
-    <button>Ajouter</button>
+
+    <input name="titre" placeholder="Titre" required>
+
+    <input name="montant" placeholder="Montant" required>
+
+    <select name="devise" required>
+        <option value="CDF">CDF</option>
+        <option value="USD">USD</option>
+    </select>
+
+    <button type="submit">Ajouter dépense</button>
+
 </form>
 
 <hr>
 
-{% for d in data %}
-<p>📌 {{ d[1] }} - {{ d[2] }} FC - {{ d[3] }}</p>
+<!-- LISTE -->
+{% for row in data %}
+
+<div class="card" style="border:1px solid #ddd;padding:10px;margin:10px">
+
+    <h3>{{ row[1] }}</h3>
+    <p>{{ row[2] }} FC</p>
+    <p>Date : {{ row[3] }}</p>
+
+    <a href="/supprimer_depense/{{ row[0] }}" style="color:red;">
+        🗑️ Supprimer
+    </a>
+
+</div>
+
 {% endfor %}
 
 <br>

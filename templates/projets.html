@@ -1,42 +1,43 @@
-
 <!DOCTYPE html>
 <html>
 <body style="font-family:Arial;padding:20px">
 
-
 <h1>🚀 Projets</h1>
 
+<!-- FORMULAIRE -->
+<form method="POST">
+
+    <input name="nom" placeholder="Nom projet" required>
+
+    <input name="budget" placeholder="Budget" required>
+
+    <select name="devise" required>
+        <option value="CDF">CDF</option>
+        <option value="USD">USD</option>
+    </select>
+
+    <button type="submit">Ajouter projet</button>
+
+</form>
+
+<hr>
+
+<!-- LISTE -->
 {% for row in data %}
 
-<div class="card">
+<div class="card" style="border:1px solid #ddd;padding:10px;margin:10px">
 
     <h3>{{ row[1] }}</h3>
-    <p>Budget : {{ row[2] }}</p>
+    <p>Budget : {{ row[2] }} FC</p>
     <p>Avance : {{ row[3] }}</p>
-    <p>{{ row[4] }}</p>
+    <p>Statut : {{ row[4] }}</p>
 
-    <a href="/supprimer_projet/{{ row[0] }}">
+    <a href="/supprimer_projet/{{ row[0] }}" style="color:red;">
         🗑️ Supprimer
     </a>
 
 </div>
 
-{% endfor %}
-<h1>🚀 Projets</h1>
-<select name="devise">
-    <option value="CDF">CDF</option>
-    <option value="USD">USD</option>
-</select>
-<form method="POST">
-    <input name="nom" placeholder="Nom projet">
-    <input name="budget" placeholder="Budget">
-    <button>Ajouter projet</button>
-</form>
-
-<hr>
-
-{% for p in data %}
-<p>📌 {{ p[1] }} - Budget: {{ p[2] }} FC</p>
 {% endfor %}
 
 <br>

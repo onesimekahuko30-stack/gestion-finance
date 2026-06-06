@@ -1,13 +1,31 @@
-
 <!DOCTYPE html>
 <html>
 <body style="font-family:Arial;padding:20px">
 
 <h1>💰 Recettes</h1>
 
+<!-- FORMULAIRE PROPRE -->
+<form method="POST">
+
+    <input name="titre" placeholder="Titre" required>
+
+    <input name="montant" placeholder="Montant" required>
+
+    <select name="devise" required>
+        <option value="CDF">CDF</option>
+        <option value="USD">USD</option>
+    </select>
+
+    <button type="submit">Ajouter</button>
+
+</form>
+
+<hr>
+
+<!-- LISTE RECETTES -->
 {% for row in data %}
 
-<div class="card">
+<div class="card" style="border:1px solid #ddd;padding:10px;margin:10px">
 
     <h3>{{ row[1] }}</h3>
     <p>{{ row[2] }} FC</p>
@@ -19,22 +37,6 @@
 
 </div>
 
-{% endfor %}
-<h1>📈 Recettes</h1>
-<select name="devise">
-    <option value="CDF">CDF</option>
-    <option value="USD">USD</option>
-</select>
-<form method="POST">
-    <input name="titre" placeholder="Titre">
-    <input name="montant" placeholder="Montant">
-    <button>Ajouter</button>
-</form>
-
-<hr>
-
-{% for r in data %}
-<p>📌 {{ r[1] }} - {{ r[2] }} FC - {{ r[3] }}</p>
 {% endfor %}
 
 <br>

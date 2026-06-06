@@ -36,6 +36,7 @@ def init_db():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         titre TEXT,
         montant REAL,
+        devise TEXT,
         date TEXT
     )
     """)
@@ -46,6 +47,7 @@ def init_db():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         titre TEXT,
         montant REAL,
+        devise TEXT, 
         date TEXT
     )
     """)
@@ -90,6 +92,7 @@ def convertir(montant, devise):
         return float(montant) * TAUX_USD_CDF
     return float(montant)
 init_db()
+
 
 def prediction_recettes():
     conn = sqlite3.connect(DB)
@@ -204,50 +207,41 @@ def dashboard():
 
     balance = recettes - depenses
     ratio = round((depenses / recettes) * 100, 2) if recettes > 0 else 0
-    plt.savefig("static/graph.png")
-    # GRAPH
+
+    # GRAPH PROPRE
     plt.figure(figsize=(5,5))
     plt.bar(["Recettes", "Dépenses"], [recettes, depenses])
     plt.title("ULTRA FINANCE")
-    plt.savefig("static/graph.png")   # 👈 ICI
+    plt.savefig("static/graph.png")
     plt.close()
-    # =========================
-# PREVISIONS SIMPLES (ULTRA PRO)
-# =========================
 
-    recettes_pred = recettes * 1.10   # +10%
-    depenses_pred = depenses * 1.08   # +8%
-    dettes_pred = dettes * 1.05       # +5%
-    projets_pred = projets * 1.07     # +7%
+    # PRÉVISIONS (GARDER UNE SEULE VERSION)
     recettes_pred = prediction_recettes()
     depenses_pred = prediction_depenses()
     dettes_pred = prediction_dettes()
     projets_pred = prediction_projets()
 
-    # ALERT DETTES RETARD
+    # ALERT
     conn = sqlite3.connect(DB)
     c = conn.cursor()
     c.execute("SELECT * FROM dettes WHERE statut='non payé'")
-    dettes_list = c.fetchall()
+    alert = len(c.fetchall())
     conn.close()
 
-    alert = len(dettes_list)
-
     return render_template(
-    "dashboard.html",
-    recettes=recettes,
-    depenses=depenses,
-    dettes=dettes,
-    projets=projets,
-    balance=balance,
-    ratio=ratio,
-    alert=alert,
-
-    recettes_pred=recettes_pred,
-    depenses_pred=depenses_pred,
-    dettes_pred=dettes_pred,
-    projets_pred=projets_pred
-)
+        "dashboard.html",
+        recettes=recettes,
+        depenses=depenses,
+        dettes=dettes,
+        projets=projets,
+        balance=balance,
+        ratio=ratio,
+        alert=alert,
+        recettes_pred=recettes_pred,
+        depenses_pred=depenses_pred,
+        dettes_pred=dettes_pred,
+        projets_pred=projets_pred
+    )
 
 # =========================
 # RECETTES
@@ -265,8 +259,7 @@ def recettes():
             "INSERT INTO recettes(titre,montant,date) VALUES(?,?,?)",
             (
     request.form["titre"],
-    convertir(request.form["montant"],
-    request.form["devise"]),
+    convertir(request.form["montant"], request.form.get("devise", "CDF")),
     datetime.now().strftime("%d/%m/%Y")
 )
 )
@@ -274,7 +267,6 @@ def recettes():
     c.execute("SELECT * FROM recettes ORDER BY id DESC")
     data = c.fetchall()
     conn.close()
-
     return render_template("recettes.html", data=data)
 
 
@@ -294,8 +286,7 @@ def depenses():
             "INSERT INTO depenses(titre,montant,date) VALUES(?,?,?)",
             (
     request.form["titre"],
-    convertir(request.form["montant"],
-    request.form["devise"]),
+    convertir(request.form["montant"], request.form.get("devise", "CDF")),
     datetime.now().strftime("%d/%m/%Y")
 )       
 )
@@ -323,7 +314,7 @@ def dettes():
     if request.method == "POST":
         c.execute(
             "INSERT INTO dettes(titre,montant,date,statut) VALUES(?,?,?,?)",
-            (request.form["titre"], convertir( request.form["montant"],request.form["devise"]), datetime.now().strftime("%d/%m/%Y"), "non payé")
+            (request.form["titre"], convertir( request.form["montant"], request.form.get("devise", "CDF")), datetime.now().strftime("%d/%m/%Y"), "non payé")
         )
         conn.commit()
 
@@ -349,7 +340,7 @@ def projets():
     if request.method == "POST":
         c.execute(
             "INSERT INTO projets(nom,budget,avance,statut) VALUES(?,?,?,?)",
-            (request.form["nom"], convertir( request.form["budget"],request.form["devise"]),  0, "en cours")
+            (request.form["nom"], convertir( request.form["budget"], request.form.get("devise", "CDF")),  0, "en cours")
         )
         conn.commit()
 

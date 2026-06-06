@@ -1,43 +1,49 @@
-
 <!DOCTYPE html>
 <html>
 <body style="font-family:Arial;padding:20px">
 
 <h1>💳 Dettes</h1>
 
+<!-- FORMULAIRE -->
+<form method="POST">
+
+    <input name="titre" placeholder="Titre" required>
+
+    <input name="montant" placeholder="Montant" required>
+
+    <select name="devise" required>
+        <option value="CDF">CDF</option>
+        <option value="USD">USD</option>
+    </select>
+
+    <button type="submit">Ajouter dette</button>
+
+</form>
+
+<hr>
+
+<!-- LISTE DETTES -->
 {% for row in data %}
 
-<div class="card">
+<div class="card" style="border:1px solid #ddd;padding:10px;margin:10px">
 
     <h3>{{ row[1] }}</h3>
     <p>{{ row[2] }} FC</p>
-    <p>{{ row[3] }}</p>
-    <p>{{ row[4] }}</p>
+    <p>Date : {{ row[3] }}</p>
+    <p>Statut : {{ row[4] }}</p>
+
     <a href="/payer_dette/{{ row[0] }}" style="color:green;">
-✔️ Payer
-</a>
-    <a href="/supprimer_dette/{{ row[0] }}">
+        ✔️ Payer
+    </a>
+
+    <br>
+
+    <a href="/supprimer_dette/{{ row[0] }}" style="color:red;">
         🗑️ Supprimer
     </a>
 
 </div>
 
-{% endfor %}
-<h1>📋 Dettes</h1>
-<select name="devise">
-    <option value="CDF">CDF</option>
-    <option value="USD">USD</option>
-</select>
-<form method="POST">
-    <input name="titre" placeholder="Titre">
-    <input name="montant" placeholder="Montant">
-    <button>Ajouter dette</button>
-</form>
-
-<hr>
-
-{% for d in data %}
-<p>⚠️ {{ d[1] }} - {{ d[2] }} FC - {{ d[4] }}</p>
 {% endfor %}
 
 <br>
